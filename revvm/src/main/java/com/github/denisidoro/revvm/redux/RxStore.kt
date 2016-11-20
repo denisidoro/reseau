@@ -10,7 +10,6 @@ class RxStore<S>(
 
     override fun replaceReducer(reducer: Reducer<S>) {
         this.reducer = reducer
-        dispatch(INIT)
     }
 
     val observable: Observable<S>

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PatternSample</string>
+    <string name="title_activity_hello">HelloActivity</string>
 </resources>

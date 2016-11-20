@@ -5,7 +5,7 @@ import rx.Observable
 import rx.Subscription
 import rx.subscriptions.CompositeSubscription
 
-abstract class BaseController: Controller, ActivityLifecycle {
+abstract class SimpleController : Controller, ActivityLifecycle {
 
     override val parent: Controller? = null
     override val children: List<Controller> = listOf()
@@ -14,7 +14,7 @@ abstract class BaseController: Controller, ActivityLifecycle {
 
     override fun dispatchLocal(action: Any): Any = {}
 
-    override fun getRoot(): Controller = parent?.let { this } ?: parent!!.getRoot()
+    override fun getRoot(): Controller = if (parent == null) this else parent!!.getRoot()
 
     override fun rootDispatch(action: Any): Any = getRoot().dispatch(action)
 

@@ -1,5 +1,7 @@
 package com.github.denisidoro.revvm.redux
 
 interface Reducer<S> {
-    fun reduce(state: S, action: Any): S
+    val reduce: (S, Any) -> S
 }
+
+class SimpleReducer<S>(override val reduce: (S, Any) -> S): Reducer<S>

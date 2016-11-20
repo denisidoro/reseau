@@ -8,7 +8,7 @@ import rx.subjects.PublishSubject
 import java.lang.ref.WeakReference
 
 abstract class LegoController<A : BaseActivity, M : ViewModel, B : ViewBinder<M>>(
-        private val activityRef: WeakReference<A>) : BaseController() {
+        private val activityRef: WeakReference<A>) : SimpleController() {
 
     constructor(activity: A) : this(WeakReference(activity))
 
@@ -20,6 +20,7 @@ abstract class LegoController<A : BaseActivity, M : ViewModel, B : ViewBinder<M>
 
     override fun onCreate() {
         super.onCreate()
+
         viewModelSubject
                 .distinctUntilChanged()
                 .doOnNext { viewBinder.bind(it)  }

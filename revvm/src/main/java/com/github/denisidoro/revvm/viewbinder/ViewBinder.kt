@@ -18,6 +18,8 @@ abstract class ViewBinder<M>(val root: ViewGroup, val dispatch: (Any) -> Any) {
 
     val compositeSubscription = CompositeSubscription()
 
+    open fun onCreate() {}
+
     abstract fun bind(viewModel: M)
 
     fun unsubscribe() {
