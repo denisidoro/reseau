@@ -3,30 +3,32 @@ package com.github.denisidoro.revvm.controller
 import com.github.denisidoro.revvm.activity.BaseActivity
 import com.github.denisidoro.revvm.viewbinder.ViewBinder
 import com.github.denisidoro.revvm.viewmodel.ViewModel
-import rx.Subscription
+import rx.Observable
 import rx.subjects.PublishSubject
 import java.lang.ref.WeakReference
 
-abstract class LegoController<S : Any, A : BaseActivity, M : ViewModel, B : ViewBinder<M>>(
-        private val activityRef: WeakReference<A>) : Controller() {
+abstract class LegoController<A : BaseActivity, M : ViewModel, B : ViewBinder<M>>(
+        private val activityRef: WeakReference<A>) : BaseController() {
 
     constructor(activity: A) : this(WeakReference(activity))
 
-    private val viewBinder: B by lazy { createViewBinder() }
+    private val viewBinder: B by lazy { createViewBinder(getActivity()) { rootDispatch(it) } }
     private val viewModelSubject by lazy { PublishSubject.create<M>() }
-    var viewModelSubscription: Subscription? = null
+    val viewModelObservable: Observable<M> = viewModelSubject.asObservable().share()
 
-    abstract fun createViewBinder(): B
+    abstract fun createViewBinder(activity: A, dispatch: (Any) -> Any): B
 
-    fun listen() {
-        viewModelSubscription = viewModelSubject
+    override fun onCreate() {
+        super.onCreate()
+        viewModelSubject
                 .distinctUntilChanged()
-                .subscribe { viewBinder.bind(it) }
+                .doOnNext { viewBinder.bind(it)  }
+                .subscribe()
+                .register()
     }
 
     override fun unsubscribe() {
         viewBinder.unsubscribe()
-        viewModelSubscription?.unsubscribe()
         super.unsubscribe()
     }
 
