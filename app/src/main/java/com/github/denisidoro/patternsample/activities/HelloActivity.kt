@@ -8,6 +8,6 @@ class HelloActivity : ControllerActivity<CounterController>() {
 
     override val layoutRes = R.layout.activity_hello
 
-    override fun createController() = CounterController(this)
+    override fun createController() = CounterController(this, R.id.counter0)
 
 }

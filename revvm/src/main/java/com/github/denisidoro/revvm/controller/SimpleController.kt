@@ -7,6 +7,7 @@ import rx.subscriptions.CompositeSubscription
 
 abstract class SimpleController : Controller, ActivityLifecycle {
 
+    override val name: String = javaClass.simpleName
     override var parent: Controller? = null
     override val children: List<Controller> = listOf()
     override val observable: Observable<out Any> = Observable.empty()
@@ -23,6 +24,10 @@ abstract class SimpleController : Controller, ActivityLifecycle {
                 propagate { it.dispatch(action) }
                 value
             }
+
+    override fun nodesBelow(): List<Controller> =
+            if (children.isEmpty()) listOf(this)
+            else children.flatMap { it.nodesBelow() }.plus(this)
 
     @CallSuper
     override fun unsubscribe() {

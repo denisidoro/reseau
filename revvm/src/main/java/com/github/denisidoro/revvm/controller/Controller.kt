@@ -4,6 +4,7 @@ import rx.Observable
 
 interface Controller {
 
+    val name: String
     var parent: Controller?
     val children: List<Controller>
     val observable: Observable<out Any>
@@ -15,6 +16,8 @@ interface Controller {
     fun dispatchRoot(action: Any): Any
 
     fun dispatch(action: Any): Any
+
+    fun nodesBelow(): List<Controller>
 
     fun unsubscribe() {
     }

@@ -17,10 +17,10 @@ abstract class LegoController<A : BaseActivity, M : ViewModel, B : ViewBinder<M>
     constructor(activity: A, root: ViewGroup) : this(WeakReference<A>(activity), root)
     constructor(activity: A) : this(activity, activity.rootView as ViewGroup)
 
-    private val viewBinder: B by lazy { createViewBinder(getActivity()) { dispatchRoot(it) } }
+    private val viewBinder: B by lazy { createViewBinder(root) { dispatchRoot(it) } }
     private val viewModelSubject by lazy { PublishSubject.create<M>() }
 
-    abstract fun createViewBinder(activity: A, dispatch: (Any) -> Any): B
+    abstract fun createViewBinder(root: ViewGroup, dispatch: (Any) -> Any): B
 
     override fun onCreate() {
         super.onCreate()

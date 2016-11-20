@@ -1,5 +1,6 @@
 package com.github.denisidoro.patternsample.controllers.counter
 
+import android.view.ViewGroup
 import com.github.denisidoro.patternsample.controllers.counter.CounterActions.MINUS
 import com.github.denisidoro.patternsample.controllers.counter.CounterActions.PLUS
 import com.github.denisidoro.revvm.activity.ControllerActivity
@@ -8,8 +9,10 @@ import com.github.denisidoro.revvm.redux.Reducer
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
-class CounterController(activity: ControllerActivity<*>) :
-        LegoStoreController<CounterState, ControllerActivity<*>, CounterViewModel, CounterViewBinder>(activity) {
+class CounterController(activity: ControllerActivity<*>, id: Int) :
+        LegoStoreController<CounterState, ControllerActivity<*>, CounterViewModel, CounterViewBinder>(activity, id) {
+
+    override val name = super.name + id
 
     override fun getInitialState() = CounterState(13)
 
@@ -33,6 +36,7 @@ class CounterController(activity: ControllerActivity<*>) :
                 .register()
     }
 
-    override fun createViewBinder(activity: ControllerActivity<*>, dispatch: (Any) -> Any) = CounterViewBinder(activity, dispatch)
+    override fun createViewBinder(root: ViewGroup, dispatch: (Any) -> Any) =
+            CounterViewBinder(root, { dispatchLocal(it) })
 
 }

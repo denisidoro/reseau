@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.support.annotation.CallSuper
 import com.github.denisidoro.revvm.controller.ActivityLifecycle
 import com.github.denisidoro.revvm.controller.Controller
-import com.github.denisidoro.revvm.controller.invokeAndPropagate
+import com.github.denisidoro.revvm.controller.invokeForAll
 
 abstract class ControllerActivity<out C : Controller> : BaseActivity() {
 
@@ -17,39 +17,42 @@ abstract class ControllerActivity<out C : Controller> : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layoutRes)
-        controller.invokeAndPropagate { asActivityController()?.onCreate() }
+        trigger { onCreate() }
     }
 
     @CallSuper
     override fun onStart() {
         super.onStart()
-        controller.invokeAndPropagate { asActivityController()?.onStart() }
+        trigger { onStart() }
     }
 
     @CallSuper
     override fun onResume() {
         super.onResume()
-        controller.invokeAndPropagate { asActivityController()?.onResume() }
+        trigger { onResume() }
     }
 
     @CallSuper
     override fun onPause() {
-        controller.invokeAndPropagate { asActivityController()?.onPause() }
+        trigger { onPause() }
         super.onPause()
     }
 
     @CallSuper
     override fun onStop() {
-        controller.invokeAndPropagate { asActivityController()?.onStop() }
+        trigger { onStop() }
         super.onStop()
     }
 
     @CallSuper
     override fun onDestroy() {
-        controller.invokeAndPropagate { asActivityController()?.onDestroy() }
+        trigger { onDestroy() }
         super.onDestroy()
     }
 
-    private fun asActivityController() = (controller as? ActivityLifecycle)
+    private fun trigger(f: ActivityLifecycle.() -> Unit) {
+        controller.invokeForAll { (it as? ActivityLifecycle)?.f() }
+    }
+
 }
 
