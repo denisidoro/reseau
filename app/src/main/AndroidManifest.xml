@@ -10,7 +10,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".hello.HelloActivity"
+            android:name=".hello.CounterActivity"
             android:label="@string/title_activity_hello"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
