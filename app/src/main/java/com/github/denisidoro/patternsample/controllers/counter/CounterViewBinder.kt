@@ -1,9 +1,10 @@
-package com.github.denisidoro.patternsample.hello
+package com.github.denisidoro.patternsample.controllers.counter
 
+import com.github.denisidoro.revvm.activity.BaseActivity
 import com.github.denisidoro.revvm.viewbinder.ViewBinder
 import kotlinx.android.synthetic.main.content_hello.view.*
 
-class CounterViewBinder(activity: CounterActivity, dispatch: (Any) -> Any) : ViewBinder<CounterViewModel>(activity, dispatch) {
+class CounterViewBinder(activity: BaseActivity, dispatch: (Any) -> Any) : ViewBinder<CounterViewModel>(activity, dispatch) {
 
     init {
         with(root) {

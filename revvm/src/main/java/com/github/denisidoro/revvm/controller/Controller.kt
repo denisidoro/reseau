@@ -4,7 +4,7 @@ import rx.Observable
 
 interface Controller {
 
-    val parent: Controller?
+    var parent: Controller?
     val children: List<Controller>
     val observable: Observable<out Any>
 
@@ -12,7 +12,7 @@ interface Controller {
 
     fun getRoot(): Controller
 
-    fun rootDispatch(action: Any): Any
+    fun dispatchRoot(action: Any): Any
 
     fun dispatch(action: Any): Any
 

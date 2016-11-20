@@ -17,39 +17,39 @@ abstract class ControllerActivity<out C : Controller> : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layoutRes)
-        controller.invokeAndPropagate { asActivityController(it)?.onCreate() }
+        controller.invokeAndPropagate { asActivityController()?.onCreate() }
     }
 
     @CallSuper
     override fun onStart() {
         super.onStart()
-        controller.invokeAndPropagate { asActivityController(it)?.onStart() }
+        controller.invokeAndPropagate { asActivityController()?.onStart() }
     }
 
     @CallSuper
     override fun onResume() {
         super.onResume()
-        controller.invokeAndPropagate { asActivityController(it)?.onResume() }
+        controller.invokeAndPropagate { asActivityController()?.onResume() }
     }
 
     @CallSuper
     override fun onPause() {
+        controller.invokeAndPropagate { asActivityController()?.onPause() }
         super.onPause()
-        controller.invokeAndPropagate { asActivityController(it)?.onPause() }
     }
 
     @CallSuper
     override fun onStop() {
+        controller.invokeAndPropagate { asActivityController()?.onStop() }
         super.onStop()
-        controller.invokeAndPropagate { asActivityController(it)?.onStop() }
     }
 
     @CallSuper
     override fun onDestroy() {
+        controller.invokeAndPropagate { asActivityController()?.onDestroy() }
         super.onDestroy()
-        controller.invokeAndPropagate { asActivityController(it)?.onDestroy() }
     }
 
-    private fun asActivityController(it: Controller) = (it as? ActivityLifecycle)
+    private fun asActivityController() = (controller as? ActivityLifecycle)
 }
 

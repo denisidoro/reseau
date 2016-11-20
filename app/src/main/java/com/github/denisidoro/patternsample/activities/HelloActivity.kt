@@ -1,9 +1,10 @@
-package com.github.denisidoro.patternsample.hello
+package com.github.denisidoro.patternsample.activities
 
 import com.github.denisidoro.patternsample.R
+import com.github.denisidoro.patternsample.controllers.counter.CounterController
 import com.github.denisidoro.revvm.activity.ControllerActivity
 
-class CounterActivity : ControllerActivity<CounterController>() {
+class HelloActivity : ControllerActivity<CounterController>() {
 
     override val layoutRes = R.layout.activity_hello
 
