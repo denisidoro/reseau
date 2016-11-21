@@ -7,7 +7,5 @@ abstract class BaseActivity: AppCompatActivity() {
 
     val rootView: View by lazy { findViewById(android.R.id.content).rootView }
 
-
-
 }
 

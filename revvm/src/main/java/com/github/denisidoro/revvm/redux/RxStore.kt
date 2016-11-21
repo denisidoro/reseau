@@ -1,7 +1,7 @@
 package com.github.denisidoro.revvm.redux
 
 import rx.Observable
-import rx.subjects.PublishSubject
+import rx.subjects.BehaviorSubject
 import rx.subjects.SerializedSubject
 
 class RxStore<S>(
@@ -13,7 +13,7 @@ class RxStore<S>(
     }
 
     val observable: Observable<S>
-    private val dispatcher = SerializedSubject<Any, Any>(PublishSubject.create<Any>())
+    private val dispatcher = SerializedSubject<Any, Any>(BehaviorSubject.create<Any>())
 
     init {
         observable = dispatcher

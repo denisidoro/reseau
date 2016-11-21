@@ -1,29 +1,35 @@
 package com.github.denisidoro.revvm.controller
 
+import android.support.annotation.IdRes
+import android.view.ViewGroup
 import com.github.denisidoro.revvm.activity.BaseActivity
 import com.github.denisidoro.revvm.viewbinder.ViewBinder
 import com.github.denisidoro.revvm.viewmodel.ViewModel
-import rx.Observable
 import rx.subjects.PublishSubject
 import java.lang.ref.WeakReference
 
 abstract class LegoController<A : BaseActivity, M : ViewModel, B : ViewBinder<M>>(
-        private val activityRef: WeakReference<A>) : SimpleController() {
+        activityRef: WeakReference<A>,
+        protected val root: ViewGroup
+) : ActivityController<A>(activityRef) {
 
-    constructor(activity: A) : this(WeakReference(activity))
+    constructor(activity: A, @IdRes resourceId: Int) : this(activity, activity.findViewById(resourceId) as ViewGroup)
+    constructor(activity: A, root: ViewGroup) : this(WeakReference<A>(activity), root)
+    constructor(activity: A) : this(activity, activity.rootView as ViewGroup)
 
-    private val viewBinder: B by lazy { createViewBinder(getActivity()) { rootDispatch(it) } }
+    open val globalDispatch: Boolean = true
+
+    private val viewBinder: B by lazy { createViewBinder(root) { if (globalDispatch) dispatchRoot(it) else dispatchLocal(it) } }
     private val viewModelSubject by lazy { PublishSubject.create<M>() }
-    val viewModelObservable: Observable<M> = viewModelSubject.asObservable().share()
 
-    abstract fun createViewBinder(activity: A, dispatch: (Any) -> Any): B
+    abstract fun createViewBinder(root: ViewGroup, dispatch: (Any) -> Any): B
 
     override fun onCreate() {
         super.onCreate()
 
         viewModelSubject
                 .distinctUntilChanged()
-                .doOnNext { viewBinder.bind(it)  }
+                .doOnNext { viewBinder.bind(it) }
                 .subscribe()
                 .register()
     }
@@ -36,7 +42,5 @@ abstract class LegoController<A : BaseActivity, M : ViewModel, B : ViewBinder<M>
     fun emitViewModel(viewModel: M) {
         viewModelSubject.onNext(viewModel)
     }
-
-    fun getActivity(): A = activityRef.get()
 
 }

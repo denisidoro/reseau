@@ -13,44 +13,32 @@
     tools:showIn="@layout/activity_hello"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/countTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="40dp"
-        android:paddingRight="40dp"
-        android:layout_gravity="center_horizontal"
-        android:textSize="100sp"
-        android:text="\?"/>
-
-    <LinearLayout
+    <com.github.denisidoro.patternsample.views.CounterView
+        android:id="@+id/counter0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:background="#cdcdcd"
+        android:orientation="vertical">
+    </com.github.denisidoro.patternsample.views.CounterView>
 
-        <Button
-            android:id="@+id/minusBT"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="-"
-            android:layout_margin="12dp"/>
-
-        <Button
-            android:id="@+id/plusBT"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="+"
-            android:layout_margin="12dp"/>
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/apiTV"
+    <com.github.denisidoro.patternsample.views.CounterView
+        android:id="@+id/counter1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="lorem ipsum"
-        android:layout_margin="12dp"/>
+        android:background="#cdcdcd"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
+    </com.github.denisidoro.patternsample.views.CounterView>
+
+    <TextView
+        android:layout_marginTop="20dp"
+        android:id="@+id/logTV"
+        android:textSize="30sp"
+        android:text="\?"
+        android:padding="20dp"
+        android:gravity="center"
+        android:background="#cdcdcd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

@@ -1,4 +1,4 @@
-package com.github.denisidoro.patternsample.hello
+package com.github.denisidoro.patternsample.controllers.counter
 
 import com.github.denisidoro.revvm.viewmodel.ViewModel
 
