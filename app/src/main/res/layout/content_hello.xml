@@ -17,6 +17,7 @@
         android:id="@+id/counter0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#cdcdcd"
         android:orientation="vertical">
     </com.github.denisidoro.patternsample.views.CounterView>
 
@@ -24,7 +25,20 @@
         android:id="@+id/counter1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#cdcdcd"
+        android:layout_marginTop="20dp"
         android:orientation="vertical">
     </com.github.denisidoro.patternsample.views.CounterView>
+
+    <TextView
+        android:layout_marginTop="20dp"
+        android:id="@+id/logTV"
+        android:textSize="30sp"
+        android:text="\?"
+        android:padding="20dp"
+        android:gravity="center"
+        android:background="#cdcdcd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

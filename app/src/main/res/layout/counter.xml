@@ -10,7 +10,7 @@
         android:paddingLeft="40dp"
         android:paddingRight="40dp"
         android:layout_gravity="center_horizontal"
-        android:textSize="100sp"
+        android:textSize="60sp"
         android:text="\?"/>
 
     <LinearLayout

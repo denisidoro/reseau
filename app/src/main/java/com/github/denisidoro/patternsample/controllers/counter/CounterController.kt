@@ -1,6 +1,7 @@
 package com.github.denisidoro.patternsample.controllers.counter
 
 import android.view.ViewGroup
+import com.github.denisidoro.patternsample.R
 import com.github.denisidoro.patternsample.controllers.counter.CounterActions.MINUS
 import com.github.denisidoro.patternsample.controllers.counter.CounterActions.PLUS
 import com.github.denisidoro.revvm.activity.ControllerActivity
@@ -9,10 +10,8 @@ import com.github.denisidoro.revvm.redux.Reducer
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
-class CounterController(activity: ControllerActivity<*>, id: Int) :
-        LegoStoreController<CounterState, ControllerActivity<*>, CounterViewModel, CounterViewBinder>(activity, id) {
-
-    override val name = super.name + id
+class CounterController(activity: ControllerActivity<*>, id: Int = 0) :
+        LegoStoreController<CounterState, ControllerActivity<*>, CounterViewModel, CounterViewBinder>(activity, getLayoutId(id)) {
 
     override fun getInitialState() = CounterState(13)
 
@@ -26,7 +25,6 @@ class CounterController(activity: ControllerActivity<*>, id: Int) :
 
     override fun onCreate() {
         super.onCreate()
-
         observable
                 .distinctUntilChanged()
                 .map(::CounterViewModel)
@@ -37,6 +35,15 @@ class CounterController(activity: ControllerActivity<*>, id: Int) :
     }
 
     override fun createViewBinder(root: ViewGroup, dispatch: (Any) -> Any) =
-            CounterViewBinder(root, { dispatchLocal(it) })
+            CounterViewBinder(root, dispatch)
 
+    override val name = "${super.name}$id"
+    override val globalDispatch = false
+
+}
+
+fun getLayoutId(id: Int): Int = when (id) {
+    0 -> R.id.counter0
+    1 -> R.id.counter1
+    else -> R.id.counter0
 }

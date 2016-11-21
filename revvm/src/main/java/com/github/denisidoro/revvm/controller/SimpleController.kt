@@ -4,6 +4,7 @@ import android.support.annotation.CallSuper
 import rx.Observable
 import rx.Subscription
 import rx.subscriptions.CompositeSubscription
+import java.util.*
 
 abstract class SimpleController : Controller, ActivityLifecycle {
 
@@ -28,6 +29,19 @@ abstract class SimpleController : Controller, ActivityLifecycle {
     override fun nodesBelow(): List<Controller> =
             if (children.isEmpty()) listOf(this)
             else children.flatMap { it.nodesBelow() }.plus(this)
+
+    fun getObservablePairs(): HashMap<String, Any> =
+            hashMapOf(
+                    *nodesBelow()
+                            .filter { it is StoreController<*> }
+                            .map { Pair(it.name, (it as StoreController<*>).store.state!!) }
+                            .toTypedArray())
+
+    fun findByName(name: String): Controller =
+            nodesBelow().filter { it.name == name }.first()
+
+    fun getState(name: String): Observable<out Any> =
+            findByName(name).observable
 
     @CallSuper
     override fun unsubscribe() {
