@@ -1,10 +1,10 @@
 # réseau
 
-A highly-scalable, reactive, MVVM-like library for Android, powered by [Redux][reduxjs], [RxJava][rxjava] and [Kotlin][kotlin]. 
+A highly scalable, reactive, MVVM-like library for Android, powered by [Redux][reduxjs], [RxJava][rxjava] and [Kotlin][kotlin]. 
 
 It is inspired by [Nubank's Lego][lego] and [Reduks][reduks].
 
-The pattern encourages you to write building blocks —generally composed by a controller, a view binder and a view model—, hereafter called node, that satisfy the following principles:
+The pattern encourages you to write building blocks —generally composed by a controller, a view binder and a view model—, hereafter called nodes, that satisfy the following principles:
 ```
 1) The state of a node is stored in an object tree within a single store.
 2) The only way to change the state is to emit an action, an object describing what happened.
@@ -88,7 +88,7 @@ class CounterController(...) : ViewStoreController<...>(...) {
 }
 ```
 
-And bind it to the activity:
+And connect it to the activity:
 ```kotlin
 class CounterActivity : ControllerActivity<CounterController>() {
     override val layoutRes = R.layout.activity_counter
@@ -111,6 +111,7 @@ In order to have two counter views, we'll change the activity layout XML and pas
 ### Hierarchy setup
 
 Each controller may have a parent or children. 
+
 To setup the desired hierarchy we define the root controller's children like this:
 
 ```kotlin
@@ -124,7 +125,7 @@ class MultipleController(...) : Controller() {
 
 ### Accessing state from other nodes
 
-It's up to you how to expose state between states. 
+It's up to you how to expose state between nodes. 
 
 You can either pass a getter lambda function to child controllers or define public functions or even prevent it whatsoever, for encapsulation reasons. One native, quick way to do this is to make your root controller extend `HolderController` and use an extension function that returns the state observable for a given controller by its name. 
 
@@ -155,8 +156,14 @@ The implementation of the Log view binder and view model are similar to the ones
 ## Dispatch range
 
 If we start the app like so, clicking on a button of the second counter will interfere with the value from the first one, because both of them have state that is reduced by the same events. To prevent this, we can restrict the dispatch range:
+```kotlin
+class CounterController(...) : ViewStoreController<...>(...) {
+    // ...
+    override val dispatchRange = DispatchRange.SELF
+}
+```
 - `SELF`: the dispatch will possibly reduce only the state of the node that dispatched the action;
-- `DOWN`: the dispatch will possibly reduce only the state of the node that dispatched the action and will be propagated to child nodes downstream;
+- `DOWN`: the dispatch will possibly reduce the state of the node that dispatched the action and will be propagated to child nodes downstream;
 - `TOP_DOWN` (default): the dispatch will possibly reduce the state of the root node and will be propagated to child nodes downstream.
 
 ## Controller types
@@ -167,7 +174,7 @@ If we start the app like so, clicking on a button of the second counter will int
 - `HolderController`: stateless by default, has helper methods to find controllers in a graph by name and should only be used as a root controller
 
 ## What about all those redux libraries I know and love?
-No need for something like *reselect* or *redux-debounce* when we can use RxJava operators such as *map()*, *filter()*, *debounce()* or *combineLatest()*.
+RxJava operators like *map()*, *filter()*, *debounce()*, *combineLatest()* or *distinctUntilChanged()* can replace some libraries such as *reselect* or *redux-debounce*.
 
 ## Trivia
 
