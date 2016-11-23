@@ -15,7 +15,7 @@ ext {
             dexmaker          : '1.4',
             mockito           : '1.10.19',
             powerMock         : '1.6.5',
-            expresso          : '2.2.2',
+            espresso          : '2.2.2',
 
             log4j             : '1.7.12'
     ]
@@ -86,9 +86,9 @@ ext {
     ]
 
     def espresso = [
-            espressoCore   : "com.android.support.test.espresso:espresso-core:$versions.expresso",
-            espressoIntents: "com.android.support.test.espresso:espresso-intents:$versions.expresso",
-            espressoContrib: "com.android.support.test.espresso:espresso-contrib:$versions.expresso"
+            espressoCore   : "com.android.support.test.espresso:espresso-core:$versions.espresso",
+            espressoIntents: "com.android.support.test.espresso:espresso-intents:$versions.espresso",
+            espressoContrib: "com.android.support.test.espresso:espresso-contrib:$versions.espresso"
     ]
 
     def dexmaker = [
@@ -135,10 +135,7 @@ ext {
     appDependencies = [
             // Support
             [configuration: "compile", dependency: support.supportCoreUI],
-            [configuration: "compile", dependency: support.supportFragment],
             [configuration: "compile", dependency: support.supportAppCompatV7],
-            [configuration: "compile", dependency: support.supportRecyclerView],
-            [configuration: "compile", dependency: support.supportCardView],
             [configuration: "compile", dependency: support.supportDesign],
 
             [configuration: "testCompile", dependency: support.supportCoreUI],
@@ -147,12 +144,6 @@ ext {
             // RxJava
             [configuration: "compile", dependency: rxJava.rxAndroid],
             [configuration: "compile", dependency: rxJava.rxJava],
-            [configuration: "compile", dependency: rxJava.rxBinding],
-            [configuration: "compile", dependency: rxJava.rxBindingV4],
-            [configuration: "compile", dependency: rxJava.rxBindingRecyclerView],
-
-            // Gson
-            [configuration: "compile", dependency: gson],
 
             // Kotlin
             [configuration: "compile", dependency: kotlin.kotlinExtension],
@@ -177,8 +168,6 @@ ext {
             // JUnit
             [configuration: "testCompile", dependency: jUnit.junit],
 
-            // Guava
-            [configuration: "testCompile", dependency: guava.guava],
             [configuration: "compile", dependency: "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"],
 
     ]
