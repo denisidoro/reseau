@@ -1,8 +1,10 @@
 # réseau
 
-A highly-scalable, reactive, MVVM-like library for Android, powered by [Redux][reduxjs], [RxJava][rxjava] and [Kotlin][kotlin]. It is based on [Nubank's Lego][lego] and [Reduks][reduks].
+A highly-scalable, reactive, MVVM-like library for Android, powered by [Redux][reduxjs], [RxJava][rxjava] and [Kotlin][kotlin]. 
 
-The pattern encourages you to write building blocks --composed by a controller, a view binder and a view model--, hereafter called node, that satisfy the following principles:
+It is inspired by [Nubank's Lego][lego] and [Reduks][reduks].
+
+The pattern encourages you to write building blocks —generally composed by a controller, a view binder and a view model—, hereafter called node, that satisfy the following principles:
 ```
 1) The state of a node is stored in an object tree within a single store.
 2) The only way to change the state is to emit an action, an object describing what happened.
@@ -123,7 +125,11 @@ class MultipleController(...) : Controller() {
 
 ### Accessing state from other nodes
 
-It's up to you how you expose state downstream. You can either pass a getter lambda function to child controllers or define public functions or even prevent it whatsoever, for encapsulation reasons. One native, quick way to do this is to make your root controller extend `HolderController` and use an extension function that returns the state observable for a given controller by its name. If we name our controllers accordingly and do the necessary modifications, our log controller could be as follows:
+It's up to you how to expose state downstream. 
+
+You can either pass a getter lambda function to child controllers or define public functions or even prevent it whatsoever, for encapsulation reasons. One native, quick way to do this is to make your root controller extend `HolderController` and use an extension function that returns the state observable for a given controller by its name. 
+
+If we name our controllers accordingly and do the necessary modifications, our log controller could be as follows:
 
 ```kotlin
 class LogController(...) : ViewController<...>(...) {
@@ -144,6 +150,7 @@ class LogController(...) : ViewController<...>(...) {
 ```
 
 If any exception is thrown in the process, an `Observable.error()` is returned. 
+
 The implementation of the Log view binder and view model are similar to the ones before.
 
 ## Dispatch range
@@ -159,7 +166,6 @@ If we start the app like so, clicking on a button of the second counter will int
 - `ViewController`: stateless, represents a view with a view binder and a view model
 - `ViewStoreController`: same as above, but stateful
 - `HolderController`: stateless by default, has helper methods to find controllers in a graph by name and should only be used as a root controller
-
 
 ## Trivia
 
