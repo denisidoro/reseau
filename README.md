@@ -81,7 +81,6 @@ class CounterController(...) : ViewStoreController<...>(...) {
     override fun onCreate() {
         super.onCreate()
         stateObservable
-                .distinctUntilChanged()
                 .map(::CounterViewModel)
                 .subscribe { emitViewModel(it) }
     }
@@ -125,7 +124,7 @@ class MultipleController(...) : Controller() {
 
 ### Accessing state from other nodes
 
-It's up to you how to expose state downstream. 
+It's up to you how to expose state between states. 
 
 You can either pass a getter lambda function to child controllers or define public functions or even prevent it whatsoever, for encapsulation reasons. One native, quick way to do this is to make your root controller extend `HolderController` and use an extension function that returns the state observable for a given controller by its name. 
 
@@ -166,6 +165,9 @@ If we start the app like so, clicking on a button of the second counter will int
 - `ViewController`: stateless, represents a view with a view binder and a view model
 - `ViewStoreController`: same as above, but stateful
 - `HolderController`: stateless by default, has helper methods to find controllers in a graph by name and should only be used as a root controller
+
+## What about all those redux libraries I know and love?
+No need for something like *reselect* or *redux-debounce* when we can use RxJava operators such as *map()*, *filter()*, *debounce()* or *combineLatest()*.
 
 ## Trivia
 
