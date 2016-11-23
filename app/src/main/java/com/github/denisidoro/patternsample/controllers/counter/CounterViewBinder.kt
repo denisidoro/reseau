@@ -7,7 +7,7 @@ import kotlinx.android.synthetic.main.counter.view.*
 class CounterViewBinder(
         viewGroup: ViewGroup,
         dispatch: (Any) -> Any)
-: ViewBinder<CounterViewModel>(viewGroup, dispatch) {
+    : ViewBinder<CounterViewModel>(viewGroup, dispatch) {
 
     init {
         with(root) {
