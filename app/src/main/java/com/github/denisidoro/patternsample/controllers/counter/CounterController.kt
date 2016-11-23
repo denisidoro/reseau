@@ -4,9 +4,9 @@ import android.view.ViewGroup
 import com.github.denisidoro.patternsample.R
 import com.github.denisidoro.patternsample.controllers.counter.CounterActions.MINUS
 import com.github.denisidoro.patternsample.controllers.counter.CounterActions.PLUS
-import com.github.denisidoro.revvm.activity.ControllerActivity
-import com.github.denisidoro.revvm.controller.LegoStoreController
-import com.github.denisidoro.revvm.redux.Reducer
+import com.github.denisidoro.reseau.activity.ControllerActivity
+import com.github.denisidoro.reseau.controller.LegoStoreController
+import com.github.denisidoro.reseau.redux.Reducer
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 

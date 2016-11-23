@@ -2,9 +2,9 @@ package com.github.denisidoro.patternsample.controllers.log
 
 import android.view.ViewGroup
 import com.github.denisidoro.patternsample.controllers.counter.CounterState
-import com.github.denisidoro.revvm.activity.ControllerActivity
-import com.github.denisidoro.revvm.controller.LegoController
-import com.github.denisidoro.revvm.controller.getGraphStateObservable
+import com.github.denisidoro.reseau.activity.ControllerActivity
+import com.github.denisidoro.reseau.controller.LegoController
+import com.github.denisidoro.reseau.controller.getGraphStateObservable
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers

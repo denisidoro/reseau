@@ -1,7 +1,7 @@
 package com.github.denisidoro.patternsample.controllers.counter
 
 import android.view.ViewGroup
-import com.github.denisidoro.revvm.viewbinder.ViewBinder
+import com.github.denisidoro.reseau.viewbinder.ViewBinder
 import kotlinx.android.synthetic.main.counter.view.*
 
 class CounterViewBinder(

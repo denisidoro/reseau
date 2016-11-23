@@ -1,1 +1,1 @@
-include ':app', ':revvm'
+include ':app', ':lib'

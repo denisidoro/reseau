@@ -3,9 +3,9 @@ package com.github.denisidoro.patternsample.controllers.multiple
 import com.github.denisidoro.patternsample.activities.MultipleActivity
 import com.github.denisidoro.patternsample.controllers.counter.CounterController
 import com.github.denisidoro.patternsample.controllers.log.LogController
-import com.github.denisidoro.revvm.controller.Controller
-import com.github.denisidoro.revvm.controller.HasState
-import com.github.denisidoro.revvm.controller.HolderController
+import com.github.denisidoro.reseau.controller.Controller
+import com.github.denisidoro.reseau.controller.HasState
+import com.github.denisidoro.reseau.controller.HolderController
 import rx.Observable
 
 class MultipleController(activity: MultipleActivity) : HolderController(), HasState<MultipleState> {

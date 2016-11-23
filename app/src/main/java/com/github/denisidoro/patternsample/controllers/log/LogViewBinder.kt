@@ -1,7 +1,7 @@
 package com.github.denisidoro.patternsample.controllers.log
 
 import android.view.ViewGroup
-import com.github.denisidoro.revvm.viewbinder.ViewBinder
+import com.github.denisidoro.reseau.viewbinder.ViewBinder
 import kotlinx.android.synthetic.main.content_hello.view.*
 
 class LogViewBinder(
