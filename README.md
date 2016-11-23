@@ -13,6 +13,9 @@ Then you arrange different *Legos* as nodes in a graph.
 
 ![untitled diagram](https://cloud.githubusercontent.com/assets/3226564/20561951/543efcfa-b168-11e6-925d-49c12f343599.png)
 
+### Installation
+  \* work in progress \*
+
 ### The pattern in a nutshell
 
 Let's write a simple counter application that consists of a single *Lego*.
@@ -22,7 +25,7 @@ First, we define a state:
 data class CounterState(val i: Int)
 ```
 
-Then we define actions and their reducers:
+Then we define actions and a state reducer:
 ```kotlin
 sealed class CounterActions {
     object DECREMENT
@@ -68,10 +71,11 @@ Finally, we create the controller that holds everything together and has all nec
 ```kotlin
 class CounterController(...) : LegoStoreController<...>(...) {
 
-    override fun createViewBinder(...) = CounterViewBinder(root, dispatch)
+    override fun createViewBinder(...) = CounterViewBinder(...)
     override fun getInitialState() = CounterState(13)
     override fun getReducer() = counterReducer
 
+    // called when the activity is created
     override fun onCreate() {
         super.onCreate()
         stateObservable
@@ -91,18 +95,23 @@ class CounterActivity : ControllerActivity<CounterController>() {
 }
 ```
 
+### Arranging multiple *Legos*
+
+![demo](https://cloud.githubusercontent.com/assets/3226564/20483051/3b555cbc-afd7-11e6-86c8-e91c619c5677.gif)
+
+   \* talk about controller inheritance \*
+   \* talk about controller reuse \*
+   \* talk about *dispatch range* \*
+   \* talk about exposing the graph state observable \*
+   \* talk about native implementation for finding indexed controllers \*
+
 ### Etymology
   < *re*, as in redux, reactive; and réseau, which means network in French.
   
 ### To do
-  - Tests
-  - Implement middlewares
+- [ ] Tests
+- [ ] Implement middlewares
 
-### Screenshots
-
-![demo](https://cloud.githubusercontent.com/assets/3226564/20483051/3b555cbc-afd7-11e6-86c8-e91c619c5677.gif)
-
-  
 [frp]: https://gist.github.com/staltz/868e7e9bc2a7b8c1f754
 [kotlin]: https://kotlinlang.org/
 [reduxjs]: http://redux.js.org/
