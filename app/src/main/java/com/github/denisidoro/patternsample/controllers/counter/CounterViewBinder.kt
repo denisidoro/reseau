@@ -11,8 +11,8 @@ class CounterViewBinder(
 
     init {
         with(root) {
-            minusBT.setOnClickListener { dispatch(CounterActions.MINUS) }
-            plusBT.setOnClickListener { dispatch(CounterActions.PLUS) }
+            minusBT.setOnClickListener { dispatch(CounterActions.DECREMENT) }
+            plusBT.setOnClickListener { dispatch(CounterActions.INCREMENT) }
         }
     }
 

@@ -8,7 +8,7 @@ import com.github.denisidoro.reseau.viewmodel.ViewModel
 import rx.subjects.PublishSubject
 import java.lang.ref.WeakReference
 
-abstract class LegoController<A : BaseActivity, M : ViewModel, B : ViewBinder<M>>(
+abstract class ViewController<A : BaseActivity, M : ViewModel, B : ViewBinder<M>>(
         activityRef: WeakReference<A>,
         protected val root: ViewGroup
 ) : ActivityController<A>(activityRef) {

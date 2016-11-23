@@ -2,23 +2,23 @@ package com.github.denisidoro.patternsample.controllers.counter
 
 import android.view.ViewGroup
 import com.github.denisidoro.patternsample.R
-import com.github.denisidoro.patternsample.controllers.counter.CounterActions.MINUS
-import com.github.denisidoro.patternsample.controllers.counter.CounterActions.PLUS
+import com.github.denisidoro.patternsample.controllers.counter.CounterActions.DECREMENT
+import com.github.denisidoro.patternsample.controllers.counter.CounterActions.INCREMENT
 import com.github.denisidoro.reseau.activity.ControllerActivity
-import com.github.denisidoro.reseau.controller.LegoStoreController
+import com.github.denisidoro.reseau.controller.ViewStoreController
 import com.github.denisidoro.reseau.redux.Reducer
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
 class CounterController(activity: ControllerActivity<*>, id: Int = 0) :
-        LegoStoreController<CounterState, ControllerActivity<*>, CounterViewModel, CounterViewBinder>(activity, getLayoutId(id)) {
+        ViewStoreController<CounterState, ControllerActivity<*>, CounterViewModel, CounterViewBinder>(activity, getLayoutId(id)) {
 
     override fun getInitialState() = CounterState(13)
 
     override fun getReducer() = Reducer { state: CounterState, action: Any ->
         when (action) {
-            is MINUS -> state.copy(i = state.i - 1)
-            is PLUS -> state.copy(i = state.i + 1)
+            is DECREMENT -> state.copy(i = state.i - 1)
+            is INCREMENT -> state.copy(i = state.i + 1)
             else -> state
         }
     }

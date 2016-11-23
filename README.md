@@ -2,23 +2,23 @@
 
 A highly-scalable, reactive, MVVM-like library for Android, powered by [Redux][reduxjs], [RxJava][rxjava] and [Kotlin][kotlin]. It is based on [Nubank's Lego][lego] and [Reduks][reduks].
 
-The pattern encourages you to write building blocks --composed by a controller, a view binder and a view model--, hereafter called *Lego*, that satisfy the following principles:
+The pattern encourages you to write building blocks --composed by a controller, a view binder and a view model--, hereafter called node, that satisfy the following principles:
 ```
-1) The state of your whole Lego is stored in an object tree within a single store.
+1) The state of a node is stored in an object tree within a single store.
 2) The only way to change the state is to emit an action, an object describing what happened.
 3) To specify how the state tree is transformed by actions, you write pure reducers.
 ```
 
-Then you arrange different *Legos* as nodes in a graph. 
+Then you arrange different nodes as in a graph, e.g.:
 
-![untitled diagram](https://cloud.githubusercontent.com/assets/3226564/20561951/543efcfa-b168-11e6-925d-49c12f343599.png)
+![Example use](https://cloud.githubusercontent.com/assets/3226564/20561951/543efcfa-b168-11e6-925d-49c12f343599.png)
 
-### Installation
+## Installation
   \* work in progress \*
 
-### The pattern in a nutshell
+## The pattern in a nutshell
 
-Let's write a simple counter application that consists of a single *Lego*.
+Let's write a simple counter application that consists of a single node.
 
 First, we define a state:
 ```kotlin
@@ -42,7 +42,7 @@ val counterReducer = Reducer { state: CounterState, action: Any ->
 }
 ```
 
-Later on we a view model, that convert state to view properties:
+Later on we build a view model, that converts state to view properties:
 ```kotlin
 class CounterViewModel(s: CounterState) : ViewModel {
     val text = s.i.toString()
@@ -69,7 +69,7 @@ class CounterViewBinder(...) : ViewBinder<CounterViewModel>(...) {
 
 Finally, we create the controller that holds everything together and has all necessary logic:
 ```kotlin
-class CounterController(...) : LegoStoreController<...>(...) {
+class CounterController(...) : ViewStoreController<...>(...) {
 
     override fun createViewBinder(...) = CounterViewBinder(...)
     override fun getInitialState() = CounterState(13)
@@ -95,21 +95,80 @@ class CounterActivity : ControllerActivity<CounterController>() {
 }
 ```
 
-### Arranging multiple *Legos*
+## Combining nodes
 
-![demo](https://cloud.githubusercontent.com/assets/3226564/20483051/3b555cbc-afd7-11e6-86c8-e91c619c5677.gif)
+Let's reuse the previous counter node and code a screen that has 4 nodes: two independent counters, one for log that keeps track of both values and another one that holds them together, as in the graph below:
 
-   \* talk about controller inheritance \*
-   \* talk about controller reuse \*
-   \* talk about *dispatch range* \*
-   \* talk about exposing the graph state observable \*
-   \* talk about native implementation for finding indexed controllers \*
+![Hierarchy](https://cloud.githubusercontent.com/assets/3226564/20578225/6f2bc292-b1ad-11e6-8998-647268eee9d8.png)
+
+The final result will be as follows:
+
+![Demo](https://cloud.githubusercontent.com/assets/3226564/20483051/3b555cbc-afd7-11e6-86c8-e91c619c5677.gif)
+
+In order to have two counter views, we'll change the activity layout XML and pass an argument to the counter controller so that it can map it to the corresponding layout resource ID. 
+
+### Hierarchy setup
+
+Each controller may have a parent or children. 
+To setup the desired hierarchy we define the root controller's children like this:
+
+```kotlin
+class MultipleController(...) : Controller() {
+    override val children = listOf(
+            CounterController(activity, 0),
+            CounterController(activity, 1),
+            LogController(activity))
+}
+```
+
+### Accessing state from other nodes
+
+It's up to you how you expose state downstream. You can either pass a getter lambda function to child controllers or define public functions or even prevent it whatsoever, for encapsulation reasons. One native, quick way to do this is to make your root controller extend `HolderController` and use an extension function that returns the state observable for a given controller by its name. If we name our controllers accordingly and do the necessary modifications, our log controller could be as follows:
+
+```kotlin
+class LogController(...) : ViewController<...>(...) {
+
+    override fun createViewBinder(...) = LogViewBinder(...)
+
+    override fun onStart() {
+        super.onStart()
+        Observable.combineLatest(
+                getGraphStateObservable<CounterState>("counter0"),
+                getGraphStateObservable<CounterState>("counter1"),
+                { c0, c1 -> Pair(c0, c1) })
+                .map { LogViewModel(it.first, it.second) }
+                .subscribe { emitViewModel(it) }
+    }
+
+}
+```
+
+If any exception is thrown in the process, an `Observable.error()` is returned. 
+The implementation of the Log view binder and view model are similar to the ones before.
+
+## Dispatch range
+
+If we start the app like so, clicking on a button of the second counter will interfere with the value from the first one, because both of them have state that is reduced by the same events. To prevent this, we can restrict the dispatch range:
+- `SELF`: the dispatch will possibly reduce only the state of the node that dispatched the action;
+- `DOWN`: the dispatch will possibly reduce only the state of the node that dispatched the action and will be propagated to child nodes downstream;
+- `TOP_DOWN` (default): the dispatch will possibly reduce the state of the root node and will be propagated to child nodes downstream.
+
+## Controller types
+- `Controller`: simple, stateless, has no view 
+- `StoreController`: stateful, has no view
+- `ViewController`: stateless, represents a view with a view binder and a view model
+- `ViewStoreController`: same as above, but stateful
+- `HolderController`: stateless by default, has helper methods to find controllers in a graph by name and should only be used as a root controller
+
+
+## Trivia
 
 ### Etymology
-  < *re*, as in redux, reactive; and réseau, which means network in French.
+  < *re*, as in redux, reactive; and *réseau*, which means network in French.
   
 ### To do
 - [ ] Tests
+- [ ] Publish lib
 - [ ] Implement middlewares
 
 [frp]: https://gist.github.com/staltz/868e7e9bc2a7b8c1f754

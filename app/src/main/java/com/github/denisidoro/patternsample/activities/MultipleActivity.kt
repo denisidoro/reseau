@@ -5,9 +5,6 @@ import com.github.denisidoro.patternsample.controllers.multiple.MultipleControll
 import com.github.denisidoro.reseau.activity.ControllerActivity
 
 class MultipleActivity : ControllerActivity<MultipleController>() {
-
-    override val layoutRes = R.layout.activity_hello
-
+    override val layoutRes = R.layout.activity_multiple
     override fun createController() = MultipleController(this)
-
 }

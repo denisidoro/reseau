@@ -3,14 +3,14 @@ package com.github.denisidoro.patternsample.controllers.log
 import android.view.ViewGroup
 import com.github.denisidoro.patternsample.controllers.counter.CounterState
 import com.github.denisidoro.reseau.activity.ControllerActivity
-import com.github.denisidoro.reseau.controller.LegoController
+import com.github.denisidoro.reseau.controller.ViewController
 import com.github.denisidoro.reseau.controller.getGraphStateObservable
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
 class LogController(activity: ControllerActivity<*>) :
-        LegoController<ControllerActivity<*>, LogViewModel, LogViewBinder>(activity) {
+        ViewController<ControllerActivity<*>, LogViewModel, LogViewBinder>(activity) {
 
     override fun onStart() {
         super.onStart()
