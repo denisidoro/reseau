@@ -183,7 +183,7 @@ If we start the app like so, clicking on a button of the second counter will int
 [react]: https://facebook.github.io/react/
 [reframe]: https://github.com/Day8/re-frame
 [astut]: https://www.sitepoint.com/12-android-tutorials-beginners/
-[lego]: htts://github.com/nubank/lego
+[lego]: https://github.com/nubank/lego
 [reduks]: https://github.com/beyondeye/Reduks
 [anvil]: https://github.com/zserge/anvil
 [rxjava]: https://github.com/ReactiveX/RxJava
