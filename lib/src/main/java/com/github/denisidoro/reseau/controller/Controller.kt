@@ -34,16 +34,25 @@ abstract class Controller: HasActivityLifecycle {
 
     fun dispatchChildren(action: Any): Any = getRoot().dispatch(action)
 
-    fun dispatch(action: Any): Any {
+    fun dispatch(action: Any, parentCalled: Boolean = false): Any {
         return when (dispatchRange) {
             DispatchRange.SELF -> dispatchSelf(action)
             DispatchRange.SELF_DOWN -> {
                 dispatchSelf(action).let {
-                    children.forEach { dispatch(action) }
+                    children.forEach { dispatch(action, true) }
                     it
                 }
             }
-            DispatchRange.ROOT_DOWN -> getRoot().dispatch(action)
+            DispatchRange.ROOT_DOWN -> {
+                if (parentCalled) {
+                    dispatchSelf(action).let {
+                        children.forEach { dispatch(action, true) }
+                        it
+                    }
+                } else {
+                    getRoot().dispatch(action)
+                }
+            }
         }
     }
 
