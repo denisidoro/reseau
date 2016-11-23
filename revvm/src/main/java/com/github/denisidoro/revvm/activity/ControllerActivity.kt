@@ -2,9 +2,7 @@ package com.github.denisidoro.revvm.activity
 
 import android.os.Bundle
 import android.support.annotation.CallSuper
-import com.github.denisidoro.revvm.controller.ActivityLifecycle
 import com.github.denisidoro.revvm.controller.Controller
-import com.github.denisidoro.revvm.controller.invokeForAll
 
 abstract class ControllerActivity<out C : Controller> : BaseActivity() {
 
@@ -17,41 +15,37 @@ abstract class ControllerActivity<out C : Controller> : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layoutRes)
-        trigger { onCreate() }
+        controller.onCreate()
     }
 
     @CallSuper
     override fun onStart() {
         super.onStart()
-        trigger { onStart() }
+        controller.onStart()
     }
 
     @CallSuper
     override fun onResume() {
         super.onResume()
-        trigger { onResume() }
+        controller.onResume()
     }
 
     @CallSuper
     override fun onPause() {
-        trigger { onPause() }
+        controller.onPause()
         super.onPause()
     }
 
     @CallSuper
     override fun onStop() {
-        trigger { onStop() }
+        controller.onStop()
         super.onStop()
     }
 
     @CallSuper
     override fun onDestroy() {
-        trigger { onDestroy() }
+        controller.onDestroy()
         super.onDestroy()
-    }
-
-    private fun trigger(f: ActivityLifecycle.() -> Unit) {
-        controller.invokeForAll { (it as? ActivityLifecycle)?.f() }
     }
 
 }

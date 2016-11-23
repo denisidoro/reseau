@@ -25,7 +25,7 @@ class CounterController(activity: ControllerActivity<*>, id: Int = 0) :
 
     override fun onCreate() {
         super.onCreate()
-        observable
+        stateObservable
                 .distinctUntilChanged()
                 .map(::CounterViewModel)
                 .subscribeOn(Schedulers.io())
@@ -38,7 +38,8 @@ class CounterController(activity: ControllerActivity<*>, id: Int = 0) :
             CounterViewBinder(root, dispatch)
 
     override val name = "${super.name}$id"
-    override val globalDispatch = false
+
+    override val dispatchRange = DispatchRange.SELF
 
 }
 

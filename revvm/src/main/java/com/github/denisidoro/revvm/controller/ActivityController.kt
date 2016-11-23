@@ -3,7 +3,7 @@ package com.github.denisidoro.revvm.controller
 import com.github.denisidoro.revvm.activity.BaseActivity
 import java.lang.ref.WeakReference
 
-abstract class ActivityController<A : BaseActivity>(private val activityRef: WeakReference<A>) : SimpleController() {
+abstract class ActivityController<A : BaseActivity>(private val activityRef: WeakReference<A>) : Controller() {
 
     constructor(activity: A) : this(WeakReference(activity))
 

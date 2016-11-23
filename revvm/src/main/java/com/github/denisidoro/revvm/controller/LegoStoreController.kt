@@ -13,20 +13,22 @@ import java.lang.ref.WeakReference
 abstract class LegoStoreController<S : Any, A : BaseActivity, M : ViewModel, B : ViewBinder<M>>(
         activityRef: WeakReference<A>,
         root: ViewGroup
-) : LegoController<A, M, B>(activityRef, root), StoreController<S> {
+) : LegoController<A, M, B>(activityRef, root), HasState<S> {
 
     constructor(activity: A, @IdRes resourceId: Int) : this(activity, activity.findViewById(resourceId) as ViewGroup)
     constructor(activity: A, root: ViewGroup) : this(WeakReference<A>(activity), root)
     constructor(activity: A) : this(activity, activity.rootView as ViewGroup)
 
-    override val store: RxStore<S> by lazy { RxStore(getInitialState(), getReducer()) }
+    val store: RxStore<S> by lazy { RxStore(getInitialState(), getReducer()) }
+
+    override var state: S = store.state
+
+    override val stateObservable: Observable<S> by lazy { store.observable.startWith(store.state) }
 
     abstract fun getReducer(): Reducer<S>
 
     abstract fun getInitialState(): S
 
-    override val observable: Observable<S> by lazy { store.observable.startWith(store.state) }
-
-    override fun dispatchLocal(action: Any) = store.dispatch(action)
+    override fun dispatchSelf(action: Any) = store.dispatch(action)
 
 }

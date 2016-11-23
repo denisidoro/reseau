@@ -1,25 +1,96 @@
 package com.github.denisidoro.revvm.controller
 
-import rx.Observable
+import android.support.annotation.CallSuper
+import com.github.denisidoro.revvm.exception.ParentAlreadySetException
+import com.github.denisidoro.revvm.lifecycle.HasActivityLifecycle
+import rx.Subscription
+import rx.subscriptions.CompositeSubscription
 
-interface Controller {
+abstract class Controller: HasActivityLifecycle {
 
-    val name: String
-    var parent: Controller?
-    val children: List<Controller>
-    val observable: Observable<out Any>
+    enum class DispatchRange {
+        SELF, SELF_DOWN, ROOT_DOWN
+    }
 
-    fun dispatchLocal(action: Any): Any
+    open val name: String = javaClass.simpleName.replace("Controller", "").decapitalize()
 
-    fun getRoot(): Controller
+    var parent: Controller? = null
+        set(value) {
+            field?.let { throw ParentAlreadySetException() }
+            field = value
+        }
 
-    fun dispatchRoot(action: Any): Any
+    protected open val children: List<Controller> = listOf()
 
-    fun dispatch(action: Any): Any
+    val compositeSubscription = CompositeSubscription()
 
-    fun nodesBelow(): List<Controller>
+    open val dispatchRange: DispatchRange = DispatchRange.ROOT_DOWN
 
-    fun unsubscribe() {
+    fun getRoot(): Controller = if (parent == null) this else parent!!.getRoot()
+
+    open protected fun dispatchSelf(action: Any): Any = action
+
+    fun dispatchRoot(action: Any): Any = getRoot().dispatch(action)
+
+    fun dispatchChildren(action: Any): Any = getRoot().dispatch(action)
+
+    fun dispatch(action: Any): Any {
+        return when (dispatchRange) {
+            DispatchRange.SELF -> dispatchSelf(action)
+            DispatchRange.SELF_DOWN -> {
+                dispatchSelf(action).let {
+                    children.forEach { dispatch(action) }
+                    it
+                }
+            }
+            DispatchRange.ROOT_DOWN -> getRoot().dispatch(action)
+        }
+    }
+
+    fun nodesBelow(): List<Controller> =
+            if (children.isEmpty()) listOf(this)
+            else listOf(this).plus(children.flatMap { it.nodesBelow() })
+
+    @CallSuper
+    open fun unsubscribe() {
+        compositeSubscription.unsubscribe()
+        propagate { it.unsubscribe() }
+    }
+
+    protected fun Subscription.register() = compositeSubscription.add(this)
+
+    fun Controller.propagate(f: (Controller) -> Unit) = children.forEach(f)
+
+    @CallSuper
+    override fun onCreate() {
+        propagate { it.parent = this }
+        propagate { it.onCreate() }
+    }
+
+    @CallSuper
+    override fun onStart() {
+        propagate { it.onStart() }
+    }
+
+    @CallSuper
+    override fun onResume() {
+        propagate { it.onResume() }
+    }
+
+    @CallSuper
+    override fun onPause() {
+        propagate { it.onPause() }
+    }
+
+    @CallSuper
+    override fun onStop() {
+        propagate { it.onStop() }
+    }
+
+    @CallSuper
+    override fun onDestroy() {
+        unsubscribe()
+        propagate { onDestroy() }
     }
 
 }

@@ -1,6 +1,6 @@
-package com.github.denisidoro.revvm.controller
+package com.github.denisidoro.revvm.lifecycle
 
-interface ActivityLifecycle {
+interface HasActivityLifecycle {
 
     fun onCreate() {
     }

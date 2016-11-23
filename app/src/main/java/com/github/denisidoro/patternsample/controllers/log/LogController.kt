@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import com.github.denisidoro.patternsample.controllers.counter.CounterState
 import com.github.denisidoro.revvm.activity.ControllerActivity
 import com.github.denisidoro.revvm.controller.LegoController
-import com.github.denisidoro.revvm.controller.SimpleController
+import com.github.denisidoro.revvm.controller.getGraphStateObservable
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -15,10 +15,9 @@ class LogController(activity: ControllerActivity<*>) :
     override fun onStart() {
         super.onStart()
 
-        val obs0 = count0Observable()
-        val obs1 = count1Observable()
         Observable.combineLatest(
-                obs0, obs1,
+                getGraphStateObservable<CounterState>("counter0"),
+                getGraphStateObservable<CounterState>("counter1"),
                 { c0, c1 -> Pair(c0, c1) })
                 .distinctUntilChanged()
                 .map { LogViewModel(it.first, it.second) }
@@ -27,10 +26,6 @@ class LogController(activity: ControllerActivity<*>) :
                 .subscribe { emitViewModel(it) }
                 .register()
     }
-
-    // temporary
-    private fun count0Observable() = (getRoot() as SimpleController).getState("CounterController0") as Observable<CounterState>
-    private fun count1Observable() = (getRoot() as SimpleController).getState("CounterController1") as Observable<CounterState>
 
     override fun createViewBinder(root: ViewGroup, dispatch: (Any) -> Any) =
             LogViewBinder(root, dispatch)
