@@ -16,7 +16,11 @@ Then you arrange different nodes as in a graph, e.g.:
 ![Example use](https://cloud.githubusercontent.com/assets/3226564/20561951/543efcfa-b168-11e6-925d-49c12f343599.png)
 
 ## Installation
-  \* work in progress \*
+```groovy
+dependencies {
+    compile 'com.github.denisidoro:reseau:0.0.3'
+}
+```
 
 ## The pattern in a nutshell
 
