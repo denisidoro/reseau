@@ -5,8 +5,8 @@ ext {
     bintrayRepo = 'maven'
     bintrayName = 'reseau'
 
-    publishedGroupId = 'com.github.denisidoro.github'
-    libraryName = 'réseau'
+    publishedGroupId = 'com.github.denisidoro'
+    libraryName = 'reseau'
     artifact = 'reseau'
 
     libraryDescription = 'A highly scalable, reactive, MVVM-like library for Android'
@@ -14,7 +14,7 @@ ext {
     siteUrl = 'https://github.com/denisidoro/reseau'
     gitUrl = 'https://github.com/denisidoro/reseau.git'
 
-    libraryVersion = '0.0.1'
+    libraryVersion = '0.0.3'
 
     developerId = 'denisidoro'
     developerName = 'Denis Isidoro'
@@ -33,7 +33,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 25
         versionCode 1
-        versionName "0.0.1"
+        versionName "0.0.2"
     }
     buildTypes {
         release {
