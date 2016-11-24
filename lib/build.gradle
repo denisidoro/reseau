@@ -3,16 +3,16 @@ apply plugin: 'kotlin-android'
 
 ext {
     bintrayRepo = 'maven'
-    bintrayName = 'revvm'
+    bintrayName = 'reseau'
 
     publishedGroupId = 'com.github.denisidoro.github'
-    libraryName = 'Revvm'
-    artifact = 'revvm'
+    libraryName = 'réseau'
+    artifact = 'reseau'
 
-    libraryDescription = 'A reactive pattern for Android'
+    libraryDescription = 'A highly scalable, reactive, MVVM-like library for Android'
 
-    siteUrl = 'https://github.com/denisidoro/revvm'
-    gitUrl = 'https://github.com/denisidoro/revvm.git'
+    siteUrl = 'https://github.com/denisidoro/reseau'
+    gitUrl = 'https://github.com/denisidoro/reseau.git'
 
     libraryVersion = '0.0.1'
 

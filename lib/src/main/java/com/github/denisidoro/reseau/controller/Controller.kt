@@ -9,7 +9,7 @@ import rx.subscriptions.CompositeSubscription
 abstract class Controller: HasActivityLifecycle {
 
     enum class DispatchRange {
-        SELF, SELF_DOWN, ROOT_DOWN
+        SELF, DOWN, TOP_DOWN
     }
 
     open val name: String = javaClass.simpleName.replace("Controller", "").decapitalize()
@@ -24,7 +24,7 @@ abstract class Controller: HasActivityLifecycle {
 
     val compositeSubscription = CompositeSubscription()
 
-    open val dispatchRange: DispatchRange = DispatchRange.ROOT_DOWN
+    open val dispatchRange: DispatchRange = DispatchRange.TOP_DOWN
 
     fun getRoot(): Controller = if (parent == null) this else parent!!.getRoot()
 
@@ -34,23 +34,23 @@ abstract class Controller: HasActivityLifecycle {
 
     fun dispatchChildren(action: Any): Any = getRoot().dispatch(action)
 
-    fun dispatch(action: Any, parentCalled: Boolean = false): Any {
-        return when (dispatchRange) {
+    fun dispatch(action: Any, caller: Controller = this): Any {
+            return when (dispatchRange) {
             DispatchRange.SELF -> dispatchSelf(action)
-            DispatchRange.SELF_DOWN -> {
+            DispatchRange.DOWN -> {
                 dispatchSelf(action).let {
-                    children.forEach { dispatch(action, true) }
+                    children.forEach { dispatch(action, caller) }
                     it
                 }
             }
-            DispatchRange.ROOT_DOWN -> {
-                if (parentCalled) {
+            DispatchRange.TOP_DOWN -> {
+                if (caller == this) {
+                    getRoot().dispatch(action)
+                } else {
                     dispatchSelf(action).let {
-                        children.forEach { dispatch(action, true) }
+                        children.forEach { dispatch(action, caller) }
                         it
                     }
-                } else {
-                    getRoot().dispatch(action)
                 }
             }
         }
