@@ -1,5 +1,7 @@
 # réseau
 
+[ ![Download](https://api.bintray.com/packages/denisidoro/maven/reseau/images/download.svg) ](https://bintray.com/denisidoro/maven/reseau/_latestVersion)
+
 A highly scalable, reactive, MVVM-like library for Android, powered by [Redux][reduxjs], [RxJava][rxjava] and [Kotlin][kotlin]. 
 
 It is inspired by [Nubank's Lego][lego] and [Reduks][reduks].
