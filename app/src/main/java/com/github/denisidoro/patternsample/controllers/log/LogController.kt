@@ -22,7 +22,7 @@ class LogController(activity: ControllerActivity<*>) :
                 .map { LogViewModel(it.first, it.second) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { emitViewModel(it) }
+                .subscribe{ emitViewModel(it) }
                 .register()
     }
 

@@ -97,14 +97,10 @@ abstract class Controller : HasActivityLifecycle {
 
     fun Controller.propagate(f: (Controller) -> Unit) = children.forEach(f)
 
-    infix fun <S> Controller.stateObservableByName(name: String): Observable<S> =
+    inline fun <reified S> Controller.stateObservableByName(name: String): Observable<S> =
             try {
                 val r = root as? RootController ?: throw RootCastException()
-                val o = r.stateObservable.map { it[name] }
-                when (o) {
-                    is Observable<*> -> o as Observable<S>
-                    else -> throw ObservableCastException()
-                }
+                r.stateObservable.map { it[name] as S }.onErrorResumeNext { Observable.error(ObservableCastException()) }
             } catch (e: ReseauException) {
                 Observable.error(e)
             }
