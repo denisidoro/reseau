@@ -128,12 +128,7 @@ ext {
 
     appDependencies = [
             // Support
-            [configuration: "compile", dependency: support.supportCoreUI],
             [configuration: "compile", dependency: support.supportAppCompatV7],
-            [configuration: "compile", dependency: support.supportDesign],
-
-            [configuration: "testCompile", dependency: support.supportCoreUI],
-            [configuration: "testCompile", dependency: support.supportFragment],
 
             // RxJava
             [configuration: "compile", dependency: rxJava.rxAndroid],
