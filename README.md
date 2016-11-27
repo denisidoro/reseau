@@ -2,7 +2,7 @@
 
 [ ![Download](https://api.bintray.com/packages/denisidoro/maven/reseau/images/download.svg) ](https://bintray.com/denisidoro/maven/reseau/_latestVersion)
 
-A highly scalable, reactive, MVVM-like library for Android, powered by [Redux][reduxjs], [RxJava][rxjava] and [Kotlin][kotlin]. 
+A highly scalable, reactive, MVVM-like library for Android, powered by [Redux][reduxjs], [RxJava][rxjava] and [Kotlin][kotlin].
 
 It is inspired by [Nubank's Lego][lego] and [Reduks][reduks].
 
@@ -11,6 +11,7 @@ The pattern encourages you to write building blocks —generally composed by a c
 1) The state of a node is stored in an object tree within a single store.
 2) The only way to change the state is to emit an action, an object describing what happened.
 3) To specify how the state tree is transformed by actions, you write pure reducers.
+4) The state of your whole activity can be accessed in a single object tree.
 ```
 
 Then you arrange different nodes as in a graph, e.g.:
@@ -20,7 +21,7 @@ Then you arrange different nodes as in a graph, e.g.:
 ## Installation
 ```groovy
 dependencies {
-    compile 'com.github.denisidoro:reseau:0.0.3'
+    compile 'com.github.denisidoro:reseau:+' // or x.y.z
 }
 ```
 
@@ -112,11 +113,11 @@ The final result will be as follows:
 
 ![Demo](https://cloud.githubusercontent.com/assets/3226564/20483051/3b555cbc-afd7-11e6-86c8-e91c619c5677.gif)
 
-In order to have two counter views, we'll change the activity layout XML and pass an argument to the counter controller so that it can map it to the corresponding layout resource ID. 
+In order to have two counter views, we'll change the activity layout XML and pass an argument to the counter controller so that it can map it to the corresponding layout resource ID.
 
 ### Hierarchy setup
 
-Each controller may have a parent or children. 
+Each controller may have a parent or children.
 
 To setup the desired hierarchy we define the root controller's children like this:
 
@@ -131,9 +132,9 @@ class MultipleController(...) : Controller() {
 
 ### Accessing state from other nodes
 
-It's up to you how to expose state between nodes. 
+It's up to you how to expose state between nodes.
 
-You can either pass a getter lambda function to child controllers or define public functions or even prevent it whatsoever, for encapsulation reasons. One native, quick way to do this is to make your root controller extend `HolderController` and use an extension function that returns the state observable for a given controller by its name. 
+You can either pass a getter lambda function to child controllers or define public functions or even prevent it whatsoever, for encapsulation reasons. One native, quick way to do this is to make your root controller extend `RootController` and use an extension function that returns the state observable for a given controller by its name.
 
 If we name our controllers accordingly and do the necessary modifications, our log controller could be as follows:
 
@@ -155,7 +156,7 @@ class LogController(...) : ViewController<...>(...) {
 }
 ```
 
-If any exception is thrown in the process, an `Observable.error()` is returned. 
+If any exception is thrown in the process, an `Observable.error()` is returned.
 
 The implementation of the Log view binder and view model are similar to the ones before.
 
@@ -173,11 +174,10 @@ class CounterController(...) : ViewStoreController<...>(...) {
 - `TOP_DOWN` (default): the dispatch will possibly reduce the state of the root node and will be propagated to child nodes downstream.
 
 ## Controller types
-- `Controller`: simple, stateless, has no view 
-- `StoreController`: stateful, has no view
-- `ViewController`: stateless, represents a view with a view binder and a view model
-- `ViewStoreController`: same as above, but stateful
-- `HolderController`: stateless by default, has helper methods to find controllers in a graph by name and should only be used as a root controller
+- `Controller`: simple, stateless, it has no view;
+- `ViewController`: stateless, it represents a view with a view binder and a view model;
+- `ViewStoreController`: same as above, but stateful;
+- `RootController`: stateless by default, it can represent the state of your activity in a single object tree.
 
 ## What about all those redux libraries I know and love?
 RxJava operators like *map()*, *filter()*, *debounce()*, *combineLatest()* or *distinctUntilChanged()* can replace some libraries such as *reselect* or *redux-debounce*.
@@ -186,10 +186,10 @@ RxJava operators like *map()*, *filter()*, *debounce()*, *combineLatest()* or *d
 
 ### Etymology
   < *re*, as in redux, reactive; and *réseau*, which means network in French.
-  
+
 ### To do
 - [ ] Tests
-- [ ] Publish lib
+- [x] Publish lib
 - [ ] Implement middlewares
 
 [frp]: https://gist.github.com/staltz/868e7e9bc2a7b8c1f754
