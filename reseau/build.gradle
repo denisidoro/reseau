@@ -14,7 +14,7 @@ ext {
     siteUrl = 'https://github.com/denisidoro/reseau'
     gitUrl = 'https://github.com/denisidoro/reseau.git'
 
-    libraryVersion = '0.0.3'
+    libraryVersion = '0.0.7'
 
     developerId = 'denisidoro'
     developerName = 'Denis Isidoro'
@@ -52,6 +52,7 @@ dependencies {
     rootProject.appDependencies.each {
         add(it.configuration, it.dependency, it.options)
     }
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
 repositories {

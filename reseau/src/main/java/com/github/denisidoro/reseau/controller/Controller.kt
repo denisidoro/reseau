@@ -1,12 +1,16 @@
 package com.github.denisidoro.reseau.controller
 
 import android.support.annotation.CallSuper
+import com.github.denisidoro.reseau.exception.ObservableCastException
 import com.github.denisidoro.reseau.exception.ParentAlreadySetException
+import com.github.denisidoro.reseau.exception.ReseauException
+import com.github.denisidoro.reseau.exception.RootCastException
 import com.github.denisidoro.reseau.lifecycle.HasActivityLifecycle
+import rx.Observable
 import rx.Subscription
 import rx.subscriptions.CompositeSubscription
 
-abstract class Controller: HasActivityLifecycle {
+abstract class Controller : HasActivityLifecycle {
 
     enum class DispatchRange {
         SELF, DOWN, TOP_DOWN
@@ -14,41 +18,37 @@ abstract class Controller: HasActivityLifecycle {
 
     open val name: String = javaClass.simpleName.replace("Controller", "").decapitalize()
 
+    private val compositeSubscription = CompositeSubscription()
+
+    open val children: List<Controller> = listOf()
+
     var parent: Controller? = null
         set(value) {
             field?.let { throw ParentAlreadySetException() }
             field = value
         }
 
-    protected open val children: List<Controller> = listOf()
+    protected open val dispatchRange: DispatchRange = DispatchRange.TOP_DOWN
 
-    val compositeSubscription = CompositeSubscription()
+    val root: Controller by lazy { parent?.root ?: this }
 
-    open val dispatchRange: DispatchRange = DispatchRange.TOP_DOWN
-
-    fun getRoot(): Controller = if (parent == null) this else parent!!.getRoot()
-
-    open protected fun dispatchSelf(action: Any): Any = action
-
-    fun dispatchRoot(action: Any): Any = getRoot().dispatch(action)
-
-    fun dispatchChildren(action: Any): Any = getRoot().dispatch(action)
+    open protected fun dispatchLocal(action: Any): Any = action
 
     fun dispatch(action: Any, caller: Controller = this): Any {
-            return when (dispatchRange) {
-            DispatchRange.SELF -> dispatchSelf(action)
+        return when (dispatchRange) {
+            DispatchRange.SELF -> dispatchLocal(action)
             DispatchRange.DOWN -> {
-                dispatchSelf(action).let {
-                    children.forEach { dispatch(action, caller) }
+                dispatchLocal(action).let {
+                    propagate { dispatch(action, caller) }
                     it
                 }
             }
             DispatchRange.TOP_DOWN -> {
                 if (caller == this) {
-                    getRoot().dispatch(action)
+                    root.dispatch(action)
                 } else {
-                    dispatchSelf(action).let {
-                        children.forEach { dispatch(action, caller) }
+                    dispatchLocal(action).let {
+                        propagate { dispatch(action, caller) }
                         it
                     }
                 }
@@ -56,19 +56,11 @@ abstract class Controller: HasActivityLifecycle {
         }
     }
 
-    fun nodesBelow(): List<Controller> =
-            if (children.isEmpty()) listOf(this)
-            else listOf(this).plus(children.flatMap { it.nodesBelow() })
-
     @CallSuper
     open fun unsubscribe() {
-        compositeSubscription.unsubscribe()
         propagate { it.unsubscribe() }
+        compositeSubscription.unsubscribe()
     }
-
-    protected fun Subscription.register() = compositeSubscription.add(this)
-
-    fun Controller.propagate(f: (Controller) -> Unit) = children.forEach(f)
 
     @CallSuper
     override fun onCreate() {
@@ -98,8 +90,23 @@ abstract class Controller: HasActivityLifecycle {
 
     @CallSuper
     override fun onDestroy() {
-        unsubscribe()
         propagate { onDestroy() }
     }
+
+    fun Subscription.register() = compositeSubscription.add(this)
+
+    fun Controller.propagate(f: (Controller) -> Unit) = children.forEach(f)
+
+    infix fun <S> Controller.stateObservableByName(name: String): Observable<S> =
+            try {
+                val r = root as? RootController ?: throw RootCastException()
+                val o = r.stateObservable.map { it[name] }
+                when (o) {
+                    is Observable<*> -> o as Observable<S>
+                    else -> throw ObservableCastException()
+                }
+            } catch (e: ReseauException) {
+                Observable.error(e)
+            }
 
 }

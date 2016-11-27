@@ -7,6 +7,7 @@ abstract class ActivityController<A : BaseActivity>(private val activityRef: Wea
 
     constructor(activity: A) : this(WeakReference(activity))
 
-    fun getActivity(): A = activityRef.get()
+    var activity: A = activityRef.get()
+        get() = activityRef.get()
 
 }

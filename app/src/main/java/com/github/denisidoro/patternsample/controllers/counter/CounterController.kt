@@ -34,8 +34,8 @@ class CounterController(activity: ControllerActivity<*>, id: Int = 0) :
                 .register()
     }
 
-    override fun createViewBinder(root: ViewGroup, dispatch: (Any) -> Any) =
-            CounterViewBinder(root, dispatch)
+    override fun createViewBinder(rootView: ViewGroup, dispatch: (Any) -> Any) =
+            CounterViewBinder(rootView, dispatch)
 
     override val name = "${super.name}$id"
 

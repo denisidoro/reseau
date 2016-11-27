@@ -139,8 +139,8 @@ class LogController(...) : ViewController<...>(...) {
     override fun onStart() {
         super.onStart()
         Observable.combineLatest(
-                getGraphStateObservable<CounterState>("counter0"),
-                getGraphStateObservable<CounterState>("counter1"),
+                stateObservableByName<CounterState>("counter0"),
+                stateObservableByName<CounterState>("counter1"),
                 { c0, c1 -> Pair(c0, c1) })
                 .map { LogViewModel(it.first, it.second) }
                 .subscribe { emitViewModel(it) }

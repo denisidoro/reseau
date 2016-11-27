@@ -2,21 +2,15 @@ ext {
     def versions = [
             support           : '25.0.0',
             playService       : '9.6.1',
-
             okhttp            : '3.4.1',
-
             rxBinding         : '0.4.0',
-
             dagger            : '2.0.2',
-
             butterKnife       : "8.4.0",
-
             androidSupportTest: '0.5',
             dexmaker          : '1.4',
             mockito           : '1.10.19',
             powerMock         : '1.6.5',
             espresso          : '2.2.2',
-
             log4j             : '1.7.12'
     ]
 
@@ -167,9 +161,7 @@ ext {
 
             // JUnit
             [configuration: "testCompile", dependency: jUnit.junit],
-
             [configuration: "compile", dependency: "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"],
-
     ]
 
 }
