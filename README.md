@@ -1,5 +1,7 @@
 # réseau
 
+[ ![Download](https://api.bintray.com/packages/denisidoro/maven/reseau/images/download.svg) ](https://bintray.com/denisidoro/maven/reseau/_latestVersion)
+
 A highly scalable, reactive, MVVM-like library for Android, powered by [Redux][reduxjs], [RxJava][rxjava] and [Kotlin][kotlin]. 
 
 It is inspired by [Nubank's Lego][lego] and [Reduks][reduks].
@@ -16,7 +18,11 @@ Then you arrange different nodes as in a graph, e.g.:
 ![Example use](https://cloud.githubusercontent.com/assets/3226564/20561951/543efcfa-b168-11e6-925d-49c12f343599.png)
 
 ## Installation
-  \* work in progress \*
+```groovy
+dependencies {
+    compile 'com.github.denisidoro:reseau:0.0.3'
+}
+```
 
 ## The pattern in a nutshell
 
