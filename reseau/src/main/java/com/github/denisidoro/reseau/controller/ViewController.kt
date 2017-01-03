@@ -18,8 +18,6 @@ abstract class ViewController<A : BaseActivity, M : ViewModel, B : ViewBinder<M>
     private val viewBinder: B by lazy { createViewBinder(rootView) { dispatch(it) } }
     private val viewModelSubject by lazy { PublishSubject.create<M>() }
 
-    abstract fun createViewBinder(rootView: ViewGroup, dispatch: (Any) -> Any): B
-
     override fun onCreate() {
         super.onCreate()
 
@@ -29,6 +27,8 @@ abstract class ViewController<A : BaseActivity, M : ViewModel, B : ViewBinder<M>
                 .subscribe()
                 .register()
     }
+
+    abstract fun createViewBinder(rootView: ViewGroup, dispatch: (Any) -> Any): B
 
     override fun unsubscribe() {
         viewBinder.unsubscribe()

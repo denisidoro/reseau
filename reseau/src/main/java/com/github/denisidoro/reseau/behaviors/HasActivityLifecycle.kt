@@ -1,4 +1,4 @@
-package com.github.denisidoro.reseau.lifecycle
+package com.github.denisidoro.reseau.behaviors
 
 interface HasActivityLifecycle {
 

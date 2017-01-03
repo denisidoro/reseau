@@ -60,12 +60,15 @@ class RxStore<S>(
 
     override fun dispatch(action: Any): Any = store.dispatch(action)
 
-    override fun getState(): S = currentState
+    override fun getState(): S = store.state
 
     override fun replaceReducer(reducer: Reducer<S>) = store.replaceReducer(reducer)
 
     override fun subscribe(subscriber: Store.Subscriber): Store.Subscription = store.subscribe(subscriber)
 
-    fun unsubscribe() = storeSubscription.unsubscribe()
+    fun unsubscribe() {
+        subscription.unsubscribe()
+        storeSubscription.unsubscribe()
+    }
 
 }

@@ -5,7 +5,7 @@ import com.github.denisidoro.reseau.exception.ObservableCastException
 import com.github.denisidoro.reseau.exception.ParentAlreadySetException
 import com.github.denisidoro.reseau.exception.ReseauException
 import com.github.denisidoro.reseau.exception.RootCastException
-import com.github.denisidoro.reseau.lifecycle.HasActivityLifecycle
+import com.github.denisidoro.reseau.behaviors.HasActivityLifecycle
 import rx.Observable
 import rx.Subscription
 import rx.subscriptions.CompositeSubscription
