@@ -19,7 +19,7 @@ abstract class ViewStoreController<S : Any, A : BaseActivity, M : ViewModel, B :
     constructor(activity: A, @IdRes resourceId: Int) : this(activity, activity.findViewById(resourceId) as ViewGroup)
     constructor(activity: A) : this(activity, activity.rootView as ViewGroup)
 
-    val store: RxStore<S> by lazy { RxStore(getInitialState(), getReducer()) }
+    val store: RxStore<S> by lazy { RxStore(getReducer(), getInitialState(), getEnhancer()) }
 
     override var state: S = store.state
         get() = store.state
@@ -29,6 +29,8 @@ abstract class ViewStoreController<S : Any, A : BaseActivity, M : ViewModel, B :
     abstract fun getReducer(): Reducer<S>
 
     abstract fun getInitialState(): S
+
+    open fun getEnhancer(): Store.Enhancer<S> = Store.Enhancer { it }
 
     override fun dispatchLocal(action: Any) = store.dispatch(action)
 

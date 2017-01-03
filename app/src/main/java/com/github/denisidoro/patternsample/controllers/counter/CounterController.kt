@@ -6,6 +6,7 @@ import com.github.denisidoro.patternsample.controllers.counter.CounterActions.DE
 import com.github.denisidoro.patternsample.controllers.counter.CounterActions.INCREMENT
 import com.github.denisidoro.reseau.activity.ControllerActivity
 import com.github.denisidoro.reseau.controller.ViewStoreController
+import redux.api.Reducer
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
@@ -14,7 +15,7 @@ class CounterController(activity: ControllerActivity<*>, id: Int = 0) :
 
     override fun getInitialState() = CounterState(13)
 
-    override fun getReducer() = Reducer0 { state: CounterState, action: Any ->
+    override fun getReducer() = Reducer { state: CounterState, action: Any ->
         when (action) {
             is DECREMENT -> state.copy(i = state.i - 1)
             is INCREMENT -> state.copy(i = state.i + 1)

@@ -125,7 +125,7 @@ ext {
             roboletric: "org.robolectric:robolectric:3.1.1"
     ]
 
-    def reduxKotlin = 'com.github.pardom.redux-kotlin:lib:1.1.0'
+    def reduxKotlin = 'com.github.pardom:redux-kotlin:1.2.1'
 
     appDependencies = [
             // Support
