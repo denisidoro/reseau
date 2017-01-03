@@ -21,9 +21,6 @@ abstract class RootController : Controller(), HasState<HashMap<String, Any>> {
                 .map { Pair(it.name, it.castAndGetState()) }
                 .toTypedArray())
 
-    /*private fun findByName(name: String): Controller =
-            nodes().filter { it.name == name }.firstOrNull() ?: throw ControllerNotFoundException()*/
-
     private fun statefulNodes() = nodes().minus(this).filter { it is HasState<*> }
 
     private fun Controller.nodes(): List<Controller> =

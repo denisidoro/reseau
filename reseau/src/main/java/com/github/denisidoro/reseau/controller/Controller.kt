@@ -12,10 +12,6 @@ import rx.subscriptions.CompositeSubscription
 
 abstract class Controller : HasActivityLifecycle {
 
-    enum class DispatchRange {
-        SELF, DOWN, TOP_DOWN
-    }
-
     open val name: String = javaClass.simpleName.replace("Controller", "").decapitalize()
 
     private val compositeSubscription = CompositeSubscription()
@@ -28,33 +24,31 @@ abstract class Controller : HasActivityLifecycle {
             field = value
         }
 
-    protected open val dispatchRange: DispatchRange = DispatchRange.TOP_DOWN
+    protected open val dispatchGroup: Int = ALL
 
     val root: Controller by lazy { parent?.root ?: this }
 
     open protected fun dispatchLocal(action: Any): Any = action
 
-    fun dispatch(action: Any, caller: Controller = this): Any {
-        return when (dispatchRange) {
-            DispatchRange.SELF -> dispatchLocal(action)
-            DispatchRange.DOWN -> {
-                dispatchLocal(action).let {
-                    propagate { dispatch(action, caller) }
-                    it
-                }
-            }
-            DispatchRange.TOP_DOWN -> {
-                if (caller == this) {
-                    root.dispatch(action)
-                } else {
-                    dispatchLocal(action).let {
-                        propagate { dispatch(action, caller) }
-                        it
+    fun dispatch(action: Any, caller: Controller = this, topDown: Boolean = false): Any =
+            when (caller.dispatchGroup) {
+                SELF -> dispatchLocal(action)
+                else -> {
+                    if (!topDown) {
+                        root.dispatch(action, caller, true)
+                    } else {
+                        if (caller.dispatchGroup == ALL || dispatchGroup == caller.dispatchGroup) {
+                            dispatchLocal(action).let {
+                                propagate { dispatch(action, caller, true) }
+                                it
+                            }
+                        } else {
+                            propagate { dispatch(action, caller, true) }
+                        }
                     }
                 }
             }
-        }
-    }
+
 
     @CallSuper
     open fun unsubscribe() {
@@ -104,5 +98,10 @@ abstract class Controller : HasActivityLifecycle {
             } catch (e: ReseauException) {
                 Observable.error(e)
             }
+
+    companion object {
+        const val ALL = -1
+        const val SELF = -2
+    }
 
 }

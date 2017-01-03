@@ -1,15 +1,19 @@
 package com.github.denisidoro.reseau.redux
 
+import redux.api.Reducer
+import redux.api.Store
 import rx.Observable
 import rx.subjects.BehaviorSubject
 import rx.subjects.SerializedSubject
 import rx.subscriptions.CompositeSubscription
 
 class RxStore<S>(
-        override var state: S,
-        private var reducer: Reducer<S>) : Store<S> {
+        private var currentState: S,
+        private var reducer: Reducer<S>)
+    : Store<S> {
 
     private val subscription = CompositeSubscription()
+    private val storeSubscription: Store.Subscription = subscribe { }
 
     override fun replaceReducer(reducer: Reducer<S>) {
         this.reducer = reducer
@@ -20,20 +24,25 @@ class RxStore<S>(
 
     init {
         observable = dispatcher
-                .scan(state, { state, action -> reducer.reduce(state, action) })
-                .doOnNext { newState -> state = newState }
+                .scan(currentState, { currentState, action -> reducer.reduce(currentState, action) })
+                .doOnNext { newState -> currentState = newState }
                 .share()
 
         subscription.add(observable.subscribe())
     }
 
-    override var dispatch: (action: Any) -> Any = { action ->
+    override fun dispatch(action: Any): Any {
         dispatcher.onNext(action)
-        action
+        return action
     }
 
-    fun unsubscribe() {
-        subscription.unsubscribe()
-    }
+    override fun subscribe(subscriber: Store.Subscriber): Store.Subscription =
+            Store.Subscription {
+                subscription.unsubscribe()
+            }
+
+    override fun getState(): S = currentState
+
+    fun unsubscribe() = storeSubscription.unsubscribe()
 
 }

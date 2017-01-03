@@ -125,6 +125,7 @@ ext {
             roboletric: "org.robolectric:robolectric:3.1.1"
     ]
 
+    def reduxKotlin = 'com.github.pardom.redux-kotlin:lib:1.1.0'
 
     appDependencies = [
             // Support
@@ -133,6 +134,9 @@ ext {
             // RxJava
             [configuration: "compile", dependency: rxJava.rxAndroid],
             [configuration: "compile", dependency: rxJava.rxJava],
+
+            // Redux
+            [configuration: "compile", dependency: reduxKotlin],
 
             // Kotlin
             [configuration: "compile", dependency: kotlin.kotlinExtension],

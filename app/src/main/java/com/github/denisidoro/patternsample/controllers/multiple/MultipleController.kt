@@ -11,7 +11,6 @@ class MultipleController(activity: MultipleActivity) : RootController() {
     val counter1 = CounterController(activity, 1)
     val log = LogController(activity)
 
-    override val children =
-            listOf(counter0, counter1, log)
+    override val children = listOf(counter0, counter1, log)
 
 }

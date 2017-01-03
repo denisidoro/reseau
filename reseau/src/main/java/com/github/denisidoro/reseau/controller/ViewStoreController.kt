@@ -4,10 +4,11 @@ import android.support.annotation.CallSuper
 import android.support.annotation.IdRes
 import android.view.ViewGroup
 import com.github.denisidoro.reseau.activity.BaseActivity
-import com.github.denisidoro.reseau.redux.Reducer
 import com.github.denisidoro.reseau.redux.RxStore
 import com.github.denisidoro.reseau.viewbinder.ViewBinder
 import com.github.denisidoro.reseau.viewmodel.ViewModel
+import redux.api.Reducer
+import redux.api.Store
 import rx.Observable
 
 abstract class ViewStoreController<S : Any, A : BaseActivity, M : ViewModel, B : ViewBinder<M>>(
