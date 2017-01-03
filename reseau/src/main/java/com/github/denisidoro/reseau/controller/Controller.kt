@@ -24,7 +24,7 @@ abstract class Controller : HasActivityLifecycle {
             field = value
         }
 
-    protected open val dispatchGroup: Int = ALL
+    protected open val dispatchGroup: Int = DispatchGroup.ALL
 
     val root: Controller by lazy { parent?.root ?: this }
 
@@ -32,12 +32,12 @@ abstract class Controller : HasActivityLifecycle {
 
     fun dispatch(action: Any, caller: Controller = this, topDown: Boolean = false): Any =
             when (caller.dispatchGroup) {
-                SELF -> dispatchLocal(action)
+                DispatchGroup.SELF -> dispatchLocal(action)
                 else -> {
                     if (!topDown) {
                         root.dispatch(action, caller, true)
                     } else {
-                        if (caller.dispatchGroup == ALL || dispatchGroup == caller.dispatchGroup) {
+                        if (caller.dispatchGroup == DispatchGroup.ALL || dispatchGroup == caller.dispatchGroup) {
                             dispatchLocal(action).let {
                                 propagate { dispatch(action, caller, true) }
                                 it
@@ -98,10 +98,5 @@ abstract class Controller : HasActivityLifecycle {
             } catch (e: ReseauException) {
                 Observable.error(e)
             }
-
-    companion object {
-        const val ALL = -1
-        const val SELF = -2
-    }
 
 }

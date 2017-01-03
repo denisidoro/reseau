@@ -2,9 +2,7 @@
 
 [ ![Download](https://api.bintray.com/packages/denisidoro/maven/reseau/images/download.svg) ](https://bintray.com/denisidoro/maven/reseau/_latestVersion)
 
-A highly scalable, reactive, MVVM-like library for Android, powered by [Redux][reduxjs], [RxJava][rxjava] and [Kotlin][kotlin].
-
-It is inspired by [Nubank's Lego][lego] and [Reduks][reduks].
+A highly scalable, reactive, MVVM-like library for Android, powered by [Redux][redux], [RxJava][rxjava] and [Kotlin][kotlin].
 
 The pattern encourages you to write building blocks —generally composed by a controller, a view binder and a view model—, hereafter called nodes, that satisfy the following principles:
 ```
@@ -160,24 +158,25 @@ If any exception is thrown in the process, an `Observable.error()` is returned.
 
 The implementation of the Log view binder and view model are similar to the ones before.
 
-## Dispatch range
+## Dispatch group
 
-If we start the app like so, clicking on a button of the second counter will interfere with the value from the first one, because both of them have state that is reduced by the same events. To prevent this, we can restrict the dispatch range:
+If we start the app like so, clicking on a button of the second counter will interfere with the value from the first one, because both of them have state that is reduced by the same events. To prevent this, we can restrict the dispatch group:
 ```kotlin
 class CounterController(...) : ViewStoreController<...>(...) {
     // ...
-    override val dispatchRange = DispatchRange.SELF
+    override val dispatchGroup = DispatchGroup.SELF
 }
 ```
-- `SELF`: the dispatch will possibly reduce only the state of the node that dispatched the action;
-- `DOWN`: the dispatch will possibly reduce the state of the node that dispatched the action and will be propagated to child nodes downstream;
-- `TOP_DOWN` (default): the dispatch will possibly reduce the state of the root node and will be propagated to child nodes downstream.
+- `SELF`: the dispatch will reduce only the state of the node that dispatched the action;
+- `ALL`: the dispatch will reduce the state of the root node and will be propagated to child nodes downstream;
+- else: the dispatch will reduce the state of all nodes whose group is equal to the emitter's one;
 
 ## Controller types
 - `Controller`: simple, stateless, it has no view;
+- `StoreController`: same as above, but stateful;
 - `ViewController`: stateless, it represents a view with a view binder and a view model;
 - `ViewStoreController`: same as above, but stateful;
-- `RootController`: stateless by default, it can represent the state of your activity in a single object tree.
+- `RootController`: it can represent the state of your activity in a single object tree.
 
 ## What about all those redux libraries I know and love?
 RxJava operators like *map()*, *filter()*, *debounce()*, *combineLatest()* or *distinctUntilChanged()* can replace some libraries such as *reselect* or *redux-debounce*.
@@ -187,11 +186,6 @@ RxJava operators like *map()*, *filter()*, *debounce()*, *combineLatest()* or *d
 ### Etymology
   < *re*, as in redux, reactive; and *réseau*, which means network in French.
 
-### To do
-- [ ] Tests
-- [x] Publish lib
-- [ ] Implement middlewares
-
 [frp]: https://gist.github.com/staltz/868e7e9bc2a7b8c1f754
 [kotlin]: https://kotlinlang.org/
 [reduxjs]: http://redux.js.org/
@@ -199,7 +193,7 @@ RxJava operators like *map()*, *filter()*, *debounce()*, *combineLatest()* or *d
 [reframe]: https://github.com/Day8/re-frame
 [astut]: https://www.sitepoint.com/12-android-tutorials-beginners/
 [lego]: https://github.com/nubank/lego
-[reduks]: https://github.com/beyondeye/Reduks
+[redux]: https://github.com/pardom/redux-kotlin
 [anvil]: https://github.com/zserge/anvil
 [rxjava]: https://github.com/ReactiveX/RxJava
 [dagger]: https://github.com/square/dagger
