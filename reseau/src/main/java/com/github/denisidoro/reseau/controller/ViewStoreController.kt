@@ -17,9 +17,6 @@ abstract class ViewStoreController<S : Any, A : BaseActivity, M : ViewModel, B :
         rootView: ViewGroup
 ) : ViewController<A, M, B>(activity, rootView), HasState<S> {
 
-    private val storeController
-    private val viewController
-
     constructor(activity: A, @IdRes resourceId: Int) : this(activity, activity.findViewById(resourceId) as ViewGroup)
     constructor(activity: A) : this(activity, activity.rootView as ViewGroup)
 
