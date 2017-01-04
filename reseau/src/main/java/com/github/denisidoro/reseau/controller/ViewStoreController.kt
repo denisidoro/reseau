@@ -1,44 +1,34 @@
 package com.github.denisidoro.reseau.controller
 
-import android.support.annotation.CallSuper
 import android.support.annotation.IdRes
 import android.view.ViewGroup
 import com.github.denisidoro.reseau.activity.BaseActivity
-import com.github.denisidoro.reseau.behaviors.HasState
-import com.github.denisidoro.reseau.redux.RxStore
+import com.github.denisidoro.reseau.behaviors.HasStore
+import com.github.denisidoro.reseau.behaviors.StoreBehavior
 import com.github.denisidoro.reseau.viewbinder.ViewBinder
 import com.github.denisidoro.reseau.viewmodel.ViewModel
 import redux.api.Reducer
 import redux.api.Store
-import rx.Observable
 
 abstract class ViewStoreController<S : Any, A : BaseActivity, M : ViewModel, B : ViewBinder<M>>(
         activity: A,
-        rootView: ViewGroup
-) : ViewController<A, M, B>(activity, rootView), HasState<S> {
+        rootView: ViewGroup,
+        private val storeBehavior: HasStore<S>)
+    : ViewController<A, M, B>(activity, rootView), HasStore<S> by storeBehavior {
 
-    constructor(activity: A, @IdRes resourceId: Int) : this(activity, activity.findViewById(resourceId) as ViewGroup)
-    constructor(activity: A) : this(activity, activity.rootView as ViewGroup)
+    constructor(activity: A, rootView: ViewGroup, reducer: Reducer<S>, initialState: S, enhancer: Store.Enhancer<S> = Store.Enhancer { it }) : this(activity, rootView, object : StoreBehavior<S>() {
+        override fun getReducer(): Reducer<S> = reducer
+        override fun getInitialState(): S = initialState
+        override fun getEnhancer(): Store.Enhancer<S> = enhancer
+    })
 
-    val store: RxStore<S> by lazy { RxStore(getReducer(), getInitialState(), getEnhancer()) }
+    constructor(activity: A, @IdRes resourceId: Int, reducer: Reducer<S>, initialState: S, enhancer: Store.Enhancer<S> = Store.Enhancer { it }) : this(activity, activity.findViewById(resourceId) as ViewGroup, reducer, initialState, enhancer)
 
-    override var state: S = store.state
-        get() = store.state
+    constructor(activity: A, reducer: Reducer<S>, initialState: S, enhancer: Store.Enhancer<S> = Store.Enhancer { it }) : this(activity, activity.rootView as ViewGroup, reducer, initialState, enhancer)
 
-    override val stateObservable: Observable<S> by lazy { store.observable.startWith(store.state) }
-
-    abstract fun getReducer(): Reducer<S>
-
-    abstract fun getInitialState(): S
-
-    open fun getEnhancer(): Store.Enhancer<S> = Store.Enhancer { it }
-
-    override fun dispatchLocal(action: Any) = store.dispatch(action)
-
-    @CallSuper
     override fun unsubscribe() {
-        store.unsubscribe()
-        super.unsubscribe()
+        viewBinder.unsubscribe()
+        storeBehavior.unsubscribe()
     }
 
 }

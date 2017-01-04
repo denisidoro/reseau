@@ -5,8 +5,13 @@ import com.github.denisidoro.patternsample.R
 import com.github.denisidoro.patternsample.controllers.counter.CounterActions.DECREMENT
 import com.github.denisidoro.patternsample.controllers.counter.CounterActions.INCREMENT
 import com.github.denisidoro.reseau.activity.ControllerActivity
+import com.github.denisidoro.reseau.behaviors.DispatchGroup.SELF
 import com.github.denisidoro.reseau.controller.ViewStoreController
+import redux.api.Dispatcher
 import redux.api.Reducer
+import redux.api.Store
+import redux.api.enhancer.Middleware
+import redux.applyMiddleware
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
@@ -22,6 +27,13 @@ class CounterController(activity: ControllerActivity<*>, id: Int = 0) :
             else -> state
         }
     }
+
+    private fun navigationMiddleware() = Middleware<CounterState> { store: Store<CounterState>, next: Dispatcher, action: Any ->
+        val result = next.dispatch(action)
+        result
+    }
+
+    override fun getEnhancer(): Store.Enhancer<CounterState> = applyMiddleware(navigationMiddleware())
 
     override fun onCreate() {
         super.onCreate()

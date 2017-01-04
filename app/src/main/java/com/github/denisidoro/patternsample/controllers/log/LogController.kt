@@ -3,7 +3,6 @@ package com.github.denisidoro.patternsample.controllers.log
 import android.view.ViewGroup
 import com.github.denisidoro.patternsample.controllers.counter.CounterState
 import com.github.denisidoro.reseau.activity.ControllerActivity
-import com.github.denisidoro.reseau.controller.ViewController
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers

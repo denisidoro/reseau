@@ -1,10 +1,13 @@
 package com.github.denisidoro.reseau.controller
 
+import com.github.denisidoro.reseau.activity.BaseActivity
 import com.github.denisidoro.reseau.behaviors.HasState
 import rx.Observable
 import java.util.*
 
-abstract class RootController : Controller(), HasState<HashMap<String, Any>> {
+abstract class RootController<A: BaseActivity>(
+        activity: A)
+    : ActivityController<A>(activity), HasState<HashMap<String, Any>> {
 
     override val stateObservable: Observable<HashMap<String, Any>> by lazy {
         val n = statefulNodes()
@@ -16,8 +19,8 @@ abstract class RootController : Controller(), HasState<HashMap<String, Any>> {
                             .toTypedArray()) })
     }
 
-    override var state: HashMap<String, Any> = hashMapOf()
-        get() = hashMapOf(*statefulNodes()
+    override fun getState(): HashMap<String, Any> =
+            hashMapOf(*statefulNodes()
                 .map { Pair(it.name, it.castAndGetState()) }
                 .toTypedArray())
 
@@ -28,6 +31,6 @@ abstract class RootController : Controller(), HasState<HashMap<String, Any>> {
             else listOf(this).plus(children.flatMap { it.nodes() })
 
     private fun Controller.castAndGetStateObservable() = (this as HasState<Any>).stateObservable
-    private fun Controller.castAndGetState() = (this as HasState<Any>).state
+    private fun Controller.castAndGetState() = (this as HasState<Any>).getState()
 
 }

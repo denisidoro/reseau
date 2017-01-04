@@ -1,4 +1,4 @@
-package com.github.denisidoro.reseau.controller
+package com.github.denisidoro.reseau.behaviors
 
 object DispatchGroup {
     const val ALL = -1
